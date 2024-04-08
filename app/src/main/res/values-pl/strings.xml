@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">Fitness App</string>
     <string name="name_label">Wpisz swoje imię</string>
+    <string name="button_login">Potwierdź</string>
+    <string name="button_back_to_login">Powrót</string>
+    <string name="increment_steps">Dodaj 1 krok</string>
+    <string name="delete_steps">Usuń wszystkie kroki</string>
+    <string name="validate_input_name">Wprowadź poprawną nazwę (4-20 znaków, bez znaków specjalnych</string>
 </resources>

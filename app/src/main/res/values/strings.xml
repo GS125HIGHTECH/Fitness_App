@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Fitness App</string>
     <string name="name_label">Enter your name</string>
+    <string name="button_login">Confirm</string>
+    <string name="button_back_to_login">Back</string>
+    <string name="increment_steps">Add 1 step</string>
+    <string name="delete_steps">Delete all steps</string>
+    <string name="validate_input_name">Enter a valid username (4-20 characters, alphanumeric only)</string>
 </resources>
