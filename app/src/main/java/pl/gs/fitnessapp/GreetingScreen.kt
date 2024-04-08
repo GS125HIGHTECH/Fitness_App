@@ -48,12 +48,20 @@ fun Greeting(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 usernameState.value = username
             }
                              },
+            onImeActionPerformed = { action ->
+                if (action == ImeAction.Done) {
+                    if (!isError(usernameState.value)) {
+                        viewModel.updateUsername(usernameState.value)
+                        viewModel.showMainView()
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 24.dp, end = 24.dp, top = 24.dp)
         )
 
-        val isError = usernameState.value.isEmpty() || usernameState.value.length < 4 || usernameState.value.length > 20 || !usernameState.value.matches(Regex("^[a-zA-Z0-9]*$"))
+        val isError = isError(usernameState.value)
 
         Button(
             onClick = {
@@ -82,4 +90,8 @@ fun Greeting(modifier: Modifier = Modifier, viewModel: MainViewModel) {
         }
 
     }
+}
+
+private fun isError(username: String): Boolean {
+    return username.isEmpty() || username.length < 4 || username.length > 20 || !username.matches(Regex("^[a-zA-Z0-9]*$"))
 }

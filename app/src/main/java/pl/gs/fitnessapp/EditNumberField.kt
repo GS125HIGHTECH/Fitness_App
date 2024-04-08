@@ -15,6 +15,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun EditNumberField(
@@ -23,6 +24,7 @@ fun EditNumberField(
     keyboardOptions: KeyboardOptions,
     value: String,
     onValueChanged: (String) -> Unit,
+    onImeActionPerformed: (ImeAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -39,6 +41,7 @@ fun EditNumberField(
         keyboardActions = KeyboardActions(
             onDone = {
                 focusManager.clearFocus()
+                onImeActionPerformed(ImeAction.Done)
             }
         )
     )
