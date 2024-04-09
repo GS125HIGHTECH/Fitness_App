@@ -19,6 +19,9 @@ interface StepsDao {
     @Update
     suspend fun updateSteps(steps: Steps)
 
-    @Query("DELETE FROM steps WHERE username = :username")
+    @Query("UPDATE Steps SET stepsCount = 0 WHERE username = :username")
     suspend fun deleteSteps(username: String)
+
+    @Query("DELETE FROM Steps")
+    suspend fun deleteAllData()
 }

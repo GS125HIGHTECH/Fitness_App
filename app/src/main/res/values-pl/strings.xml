@@ -7,4 +7,7 @@
     <string name="increment_steps">Dodaj 1 krok</string>
     <string name="delete_steps">Usuń wszystkie kroki</string>
     <string name="validate_input_name">Wprowadź poprawną nazwę (4-20 znaków, bez znaków specjalnych</string>
+    <string name="app_greeting">"Witaj "</string>
+    <string name="delete_all_data">Usuń wszystkie dane</string>
+    <string name="congratulations">Gratulacje!</string>
 </resources>

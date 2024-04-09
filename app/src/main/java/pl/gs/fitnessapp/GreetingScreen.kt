@@ -1,5 +1,6 @@
 package pl.gs.fitnessapp
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,11 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun Greeting(modifier: Modifier = Modifier, viewModel: MainViewModel) {
 
-    Column {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         Text(
             text = stringResource(R.string.app_name),
             textAlign = TextAlign.Center,
@@ -30,65 +35,76 @@ fun Greeting(modifier: Modifier = Modifier, viewModel: MainViewModel) {
             fontWeight = FontWeight.SemiBold,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 24.dp)
         )
 
-        val usernameState = remember { mutableStateOf(viewModel.username) }
 
-        EditNumberField(
-            label = R.string.name_label,
-            leadingIcon = R.drawable.baseline_login_24,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Uri,
-                imeAction = ImeAction.Done,
-            ),
-            value = usernameState.value,
-            onValueChanged = {
-                username -> if(username.length <= 30) {
-                usernameState.value = username
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(vertical = 24.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            val usernameState = remember { mutableStateOf(viewModel.username) }
+
+            EditNumberField(
+                label = R.string.name_label,
+                leadingIcon = R.drawable.baseline_login_24,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Uri,
+                    imeAction = ImeAction.Done,
+                ),
+                value = usernameState.value,
+                onValueChanged = { username ->
+                    if (username.length <= 30) {
+                        usernameState.value = username
+                    }
+                },
+                onImeActionPerformed = { action ->
+                    if (action == ImeAction.Done) {
+                        if (!isError(usernameState.value)) {
+                            viewModel.updateUsername(usernameState.value)
+                            viewModel.showMainView()
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+            )
+
+            val isError = isError(usernameState.value)
+
+            if (usernameState.value.isNotEmpty()) {
+                if (isError) {
+                    Text(
+                        text = stringResource(R.string.validate_input_name),
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp, start = 24.dp, end = 24.dp)
+                    )
+                }
             }
-                             },
-            onImeActionPerformed = { action ->
-                if (action == ImeAction.Done) {
-                    if (!isError(usernameState.value)) {
+
+            Button(
+                onClick = {
+                    if (!isError) {
                         viewModel.updateUsername(usernameState.value)
                         viewModel.showMainView()
                     }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 24.dp, end = 24.dp, top = 24.dp)
-        )
-
-        val isError = isError(usernameState.value)
-
-        Button(
-            onClick = {
-                if (!isError) {
-                viewModel.updateUsername(usernameState.value)
-                viewModel.showMainView()
-                }
-                      },
-            enabled = !isError,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, start = 32.dp, end = 32.dp)
-        ) {
-            Text(text = stringResource(R.string.button_login))
-        }
-
-        if (usernameState.value.isNotEmpty()) {
-            if (isError) {
-                Text(
-                    text = stringResource(R.string.validate_input_name),
-                    fontSize = 12.sp,
-                    color = Color.Red,
-                    modifier = Modifier.padding(top = 8.dp, start = 24.dp, end = 24.dp)
-                )
+                },
+                enabled = !isError,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 32.dp, end = 32.dp)
+            ) {
+                Text(text = stringResource(R.string.button_login))
             }
-        }
 
+        }
     }
 }
 

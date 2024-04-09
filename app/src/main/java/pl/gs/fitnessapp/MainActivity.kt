@@ -1,6 +1,12 @@
 package pl.gs.fitnessapp
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,21 +31,30 @@ class MainActivity : ComponentActivity() {
     }
 
     private val viewModel by viewModels<MainViewModel>()
-    private val stepsViewModelFactory = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(StepsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return StepsViewModel(database.dao) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
-
-    private val stepsViewModel by viewModels<StepsViewModel>(factoryProducer = { stepsViewModelFactory })
+    private lateinit var stepsViewModel: StepsViewModel
+    private lateinit var sensorManager: SensorManager
+    private var stepSensor: Sensor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+
+        val stepsViewModelFactory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(StepsViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return StepsViewModel(database.dao, sensorManager, stepSensor, viewModel) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+
+        stepsViewModel = ViewModelProvider(this, stepsViewModelFactory)[StepsViewModel::class.java]
+
         setContent {
             FitnessAppTheme {
                 Surface(
@@ -55,4 +70,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        stepsViewModel.registerSensorListener()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stepsViewModel.unregisterSensorListener()
+    }
+
 }

@@ -6,4 +6,7 @@
     <string name="increment_steps">Add 1 step</string>
     <string name="delete_steps">Delete all steps</string>
     <string name="validate_input_name">Enter a valid username (4-20 characters, alphanumeric only)</string>
+    <string name="app_greeting">Hello</string>
+    <string name="delete_all_data">Delete all data</string>
+    <string name="congratulations">Congratulations!</string>
 </resources>
